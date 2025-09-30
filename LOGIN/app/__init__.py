@@ -1,0 +1,12 @@
+from flask import Flask
+from flask_cors import CORS  # 解决跨域问题（前端调用后端）
+from backend.api import login_api  
+# 初始化Flask应用
+app = Flask(__name__)
+CORS(app)  # 允许跨域请求
+
+# 导入接口（后续添加）
+from backend.api import login_api, register_api, book_api
+
+if __name__ == '__main__':
+  app.run(debug=True)  # 开发模式运行（本地地址：127.0.0.1:5000）
