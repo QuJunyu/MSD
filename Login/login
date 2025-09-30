@@ -57,6 +57,7 @@
         <p>Don't have an account yet?<a href="register.html">Register immediately</a></p> 
       </form>
     </div>
+      <script src="js/login-validate.js"></script>  
   </body>
 </html>
     
