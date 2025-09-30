@@ -1,21 +1,21 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 
-# 初始化Flask应用
+# Initialize Flask application
 app = Flask(__name__)
-# 用于session和flash消息的加密密钥(生产环境需更换为复杂密钥)
+# Secret key for session and flash messages (replace with a complex key in production)
 app.secret_key = 'dev_secret_key_12345'
 
-# 模拟数据库(实际项目中替换为真实数据库)
-# 结构: {用户名: 密码}
+# Mock database (replace with real database in actual project)
+# Structure: {username: password}
 users_db = {
     "student1": "book123",
     "teacher": "teach456"
 }
 
-# 首页路由
+# Home page route
 @app.route('/')
 def home():
-    # 如果已登录，显示首页；否则重定向到登录页
+    # If logged in, show home page; otherwise redirect to login page
     if 'username' in session:
         return f"""
         <h1>Welcome to Campus Second-hand Book Trading Platform</h1>
@@ -24,21 +24,21 @@ def home():
         """
     return redirect(url_for('login'))
 
-# 登录路由(支持GET和POST方法)
+# Login route (supports GET and POST methods)
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        # 获取表单数据
+        # Get form data
         username = request.form.get('username', '').strip()
         password = request.form.get('password', '').strip()
 
-        # 验证逻辑
+        # Validation logic
         if not username or not password:
             flash('Username and password cannot be empty!')
             return redirect(url_for('login'))
         
         if username in users_db and users_db[username] == password:
-            # 登录成功，保存会话
+            # Login successful, save to session
             session['username'] = username
             flash('Login successful!')
             return redirect(url_for('home'))
@@ -46,10 +46,10 @@ def login():
             flash('Invalid username or password!')
             return redirect(url_for('login'))
     
-    # GET请求：显示登录页面
+    # GET request: show login page
     return render_template('login.html')
 
-# 注册路由
+# Registration route
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -64,21 +64,21 @@ def register():
             flash('Username already exists!')
             return redirect(url_for('register'))
         
-        # 注册成功(实际项目中需加密密码后存储)
+        # Registration successful (in actual project, store encrypted password)
         users_db[username] = password
         flash('Registration successful! Please login.')
         return redirect(url_for('login'))
     
-    # GET请求：显示注册页面
+    # GET request: show registration page
     return render_template('register.html')
 
-# 退出登录路由
+# Logout route
 @app.route('/logout')
 def logout():
-    session.pop('username', None)  # 清除会话
+    session.pop('username', None)  # Clear session
     flash('Logged out successfully!')
     return redirect(url_for('login'))
 
-# 启动应用
+# Start the application
 if __name__ == '__main__':
-    app.run(debug=True)  # 开发模式(生产环境需关闭debug)
+    app.run(debug=True)  # Development mode (disable debug in production)
