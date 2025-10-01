@@ -1,0 +1,20 @@
+Pass
+1. Start the backend service: The prompt shows "* Running on http://127.0.0.1:5000" (accessible)
+2. Test cross-domain configuration (allowing front-end calls): Successful (the service can start, the browser can access, and Postman can see the cross-domain headers)
+3. Test if the interface can receive parameters using Postman: Returns {"success": true, "message": "Login successful"}: This indicates that the interface can normally receive parameters
+4. Test if empty parameters are intercepted (logical correctness): Result: Returns {"success": false, "message": "Username or password cannot be empty"}
+Key contradiction / Error
+1.Missing startup entry file:Create a new main.py file in the backend/app directory (as the startup entry point)
+{
+# Import the app (Flask application object) from the __init__.py file in the current directory from . import app
+
+# Startup Entry: When main.py is run directly, the service is started. if __name__ == '__main__':
+app.run(host='127.0.0.1', port=5000, debug=True)
+}
+2.Modify backend/app/__init__.py (retain only the Flask initialization, remove the startup code)
+The previous code placed the startup logic in __init__.py. Python treats backend.app as a "package" rather than an "executable module", 
+so it prompts "cannot be directly executed". By adding main.py as a dedicated startup entry point, Python can correctly recognize and start the service.
+3.This error is a typical case of circular import: backend/app/__init__.py and backend/api/xxx_api.py import each other, causing Python to fail in module initialization. Specifically:
+app/__init__.py imports the api module (from ..api import ...)
+while api/login_api.py imports the app object (from ..app import app)
+This forms a "app→api→app" loop, resulting in import failure. Please note that need to modify the interface files.
