@@ -1,1 +1,30 @@
-
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Registration - Campus Second-hand Book Trading Platform</title>
+    <link rel="stylesheet" href="css/register.css">
+  </head>
+  <body>
+    <div class="register-container">
+      <h2>User registration</h2>
+      <form id="registerForm">
+        <div class="form-group">
+          <label>Username：</label>
+          <input type="text" name="username" required>
+        </div>
+        <div class="form-group">
+          <label>Password：</label>
+          <input type="password" name="password" required>
+        </div>
+        <div class="form-group">
+          <label>Confirm Password：</label>
+          <input type="password" name="confirmPassword" required>
+        </div>
+        <button type="submit">Registration</button>
+        <p>Existing account？<a href="login.html">Log in immediately</a></p>
+      </form>
+    </div>
+    <script src="js/register-validate.js"></script>
+  </body>
+</html>
