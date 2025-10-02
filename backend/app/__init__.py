@@ -1,10 +1,11 @@
 from flask import Flask
-from flask_cors import CORS  
-from backend.api import login_api  # 添加此行
+from flask_cors import CORS
+
+# Initialize the Flask application (core object)
 app = Flask(__name__)
-CORS(app)  
 
-from backend.api import login_api, register_api, book_api
+# Configure CORS (allow the frontend to call the login API)
+CORS(app, resources={r"/api/login": {"origins": "*"}})
 
-if __name__ == '__main__':
-  app.run(debug=True)  
+# Import the login API (placed after app initialization to avoid circular imports)
+from ..api.login_api import login
