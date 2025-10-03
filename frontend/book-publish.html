@@ -1,1 +1,37 @@
-
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Publish books - Campus Second-hand Book Trading Platform</title>
+    <link rel="stylesheet" href="css/book-publish.css">
+  </head>
+  <body>
+    <div class="publish-container">
+      <h2>Publish second-hand books</h2>
+      <form id="publishForm">
+        <div class="form-group">
+          <label>Title of the book：</label>
+          <input type="text" name="title" required>
+        </div>
+        <div class="form-group">
+          <label>Author：</label>
+          <input type="text" name="author" required>
+        </div>
+        <div class="form-group">
+          <label>Price (Yuan)：</label>
+          <input type="number" name="price" min="0" step="0.01" required>
+        </div>
+        <div class="form-group">
+          <label>Grade of quality：</label>
+          <select name="condition" required>
+            <option value="new">Newly-made</option>
+            <option value="like-new">Nine out of ten new condition</option>
+            <option value="used">Seventy percent new</option>
+          </select>
+        </div>
+        <button type="submit">Release</button>
+      </form>
+    </div>
+    <script src="js/book-publish.js"></script>
+  </body>
+</html>
