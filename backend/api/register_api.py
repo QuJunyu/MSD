@@ -1,9 +1,7 @@
-from backend.api import register_api  # 添加此行
-
 from flask import request, jsonify
-from backend.app import app
+from ..app import app  # 修正：相对路径导入 app 实例
 import mysql.connector
-from backend.api.login_api import db_config  # Reuse database configuration
+from .login_api import db_config
 
 # Registration interface (POST /api/register)
 @app.route('/api/register', methods=['POST'])
