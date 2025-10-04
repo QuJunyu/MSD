@@ -1,30 +1,28 @@
--- Create database (if it doesn't exist)
-CREATE DATABASE IF NOT EXISTS campus_book;
-USE campus_book;
+CREATE DATABASE IF NOT EXISTS campus_book_trade;
+USE campus_book_trade;
 
--- User table (supports login, registration, password modification)
 CREATE TABLE IF NOT EXISTS users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(50) UNIQUE NOT NULL,  -- Username (unique)
-    password VARCHAR(255) NOT NULL         -- Password (plain text, needs encryption in actual projects)
+  id INT AUTO_INCREMENT PRIMARY KEY,  -- Incremental ID
+  username VARCHAR(50) UNIQUE NOT NULL,  -- User name (unique)
+  password VARCHAR(255) NOT NULL,  -- Password (for subsequent encryption and storage)
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP  -- Creation Date
 );
 
--- Book table (supports publishing, viewing all books)
+-- 书籍表（支持发布、查看所有书籍）
 CREATE TABLE IF NOT EXISTS books (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(100) NOT NULL,   -- Book title
-    author VARCHAR(100) NOT NULL,  -- Author
-    price DECIMAL(10, 2) NOT NULL, -- Price
-    user_id INT NOT NULL,          -- Publisher ID (associated with users table)
-    publish_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- Publishing time
-    FOREIGN KEY (user_id) REFERENCES users(id)  -- Associated user
+    title VARCHAR(100) NOT NULL,   -- 书名
+    author VARCHAR(100) NOT NULL,  -- 作者
+    price DECIMAL(10, 2) NOT NULL, -- 价格
+    user_id INT NOT NULL,          -- 发布者ID（关联users表）
+    publish_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- 发布时间
+    FOREIGN KEY (user_id) REFERENCES users(id)  -- 关联用户
 );
 
--- Insert test data
-INSERT IGNORE INTO users (username, password) VALUES 
-('test1', '123456'),  -- Test user 1 (password can be modified)
-('test2', '456789');  -- Test user 2
 
+-- 插入测试用户（方便C测试登录功能）
+-- 用户名：test1，密码：123456（C可直接用此账号测试）
+INSERT IGNORE INTO users (username, password) VALUES ('test1', '123456');
 INSERT IGNORE INTO books (title, author, price, user_id) VALUES 
-('Python Programming', 'Zhang San', 30.00, 1),  -- Book published by test1
-('Java Introduction', 'Li Si', 25.50, 2);   -- Book published by test2
+('Python', 'A', 30.00, 1),  -- test1发布的书
+('Java', 'B', 25.50, 2);   -- test2发布的书
