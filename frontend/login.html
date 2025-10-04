@@ -1,4 +1,4 @@
-<!D<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
   <head>
     <meta charset="UTF-8">
@@ -38,6 +38,22 @@
         border-radius: 3px;
         cursor: pointer;
       }
+      .message {
+        margin-top: 15px;
+        padding: 10px;
+        border-radius: 3px;
+        text-align: center;
+      }
+      .message.error {
+        color: #dc3545;
+        background-color: #f8d7da;
+        border: 1px solid #f5c6cb;
+      }
+      .message.success {
+        color: #28a745;
+        background-color: #d4edda;
+        border: 1px solid #c3e6cb;
+      }
     </style>
   </head>
   <body>
@@ -46,14 +62,15 @@
       <form id="loginForm">  
         <div class="form-group">
           <label>Username：</label>
-          <input type="text" name="username" required>  
+          <input type="text" name="username">  
         </div>
         <div class="form-group">
           <label>Password：</label>
-          <input type="password" name="password" required>
+          <input type="password" name="password">
         </div>
         <button type="submit">Login</button>
-        <p>Don't have an account yet?<a href="register.html">Register immediately</a></p> 
+        <p>Don't have an account yet?<a href="register.html">Register immediately</a></p>
+        <div id="message" class="message"></div>
       </form>
     </div>
       <script src="js/login-validate.js"></script>  
