@@ -1,14 +1,14 @@
 from flask import Flask
 from flask_cors import CORS
 
-# Initialize the Flask application
+# 初始化Flask应用（核心对象）
 app = Flask(__name__)
 
-# Configure CORS (allow all APIs to be called by the frontend)
+# 允许所有/api/*接口跨域
 CORS(app, resources={r"/api/*": {"origins": "*"}})
 
-# Import all interfaces (placed after app initialization to avoid circular imports)
-from ..api.login_api import login
-from ..api.register_api import register
-from ..api.book_api import publish_book, get_all_books
-from ..api.user_api import change_password
+# 导入接口函数，确保路由注册（关键修正）
+from ..api.login_api import login           # 登录接口
+from ..api.register_api import register     # 注册接口
+from ..api.book_api import publish_book     # 书籍发布接口（新增）
+from ..api.book_api import get_all_books    # 查看书籍接口（新增）
