@@ -2,213 +2,99 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>Publish a book</title>
+    <title>Publish Book</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
-
-        body {
-            background-color: #f5f5f5;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 600px;
-            margin: 50px auto;
-            background-color: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-
-        h2 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 25px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #666;
-            font-weight: 500;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 16px;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: #007bff;
-            box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
-        }
-
-        .btn {
-            width: 100%;
-            padding: 12px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .btn:hover {
-            background-color: #0056b3;
-        }
-
-        .message {
-            margin-top: 15px;
-            padding: 10px;
-            border-radius: 4px;
-            text-align: center;
-            font-size: 14px;
-        }
-
-        .success {
-            color: #28a745;
-            background-color: #f0fff4;
-            border: 1px solid #c3e6c3;
-        }
-
-        .error {
-            color: #dc3545;
-            background-color: #fff5f5;
-            border: 1px solid #ffe3e3;
-        }
-
+        /* 保持原有样式，新增导航栏样式 */
         .navbar {
             margin-bottom: 30px;
             padding: 15px 0;
             border-bottom: 1px solid #eee;
         }
-
         .navbar a {
             margin-right: 20px;
             color: #007bff;
             text-decoration: none;
             font-size: 16px;
         }
-
         .navbar a:hover {
             text-decoration: underline;
+        }
+        /* 原有表单样式保持不变 */
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+        }
+        button:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="navbar">
-            <a href="book-list.html">View all books</a>
-            <a href="change-password.html">Change password</a>
-            <a href="login.html" onclick="logout()">Log out</a>
-        </div>
-        
-        <h2>Publish second-hand books</h2>
-        <form id="publishForm">
-            <div class="form-group">
-                <label for="title">Title of the book：</label>
-                <input type="text" id="title" name="title" placeholder="Please enter the book title.">
-            </div>
-            <div class="form-group">
-                <label for="author">Author：</label>
-                <input type="text" id="author" name="author" placeholder="Please enter the author.">
-            </div>
-            <div class="form-group">
-                <label for="price">Price (Yuan)：</label>
-                <input type="number" id="price" name="price" step="0.01" min="0" placeholder="Please enter the price.">
-            </div>
-            <button type="submit" class="btn">Publish a book</button>
-            <div id="message" class="message"></div>
-        </form>
+    <!-- 新增导航栏：连接到其他页面 -->
+    <div class="navbar">
+        <a href="book-list.html">View all books</a>
+        <a href="login.html" onclick="logout()">Log out</a>
     </div>
 
+    <h2>Publish a New Book</h2>
+    <form id="publishForm">
+        <div class="form-group">
+            <label for="title">Book Title:</label>
+            <input type="text" id="title" name="title" required>
+        </div>
+        <div class="form-group">
+            <label for="author">Author:</label>
+            <input type="text" id="author" name="author" required>
+        </div>
+        <div class="form-group">
+            <label for="price">Price (¥):</label>
+            <input type="number" id="price" name="price" step="0.01" min="0" required>
+        </div>
+        <div class="form-group">
+            <label for="condition">Condition:</label>
+            <select id="condition" name="condition" required>
+                <option value="">Select condition</option>
+                <option value="new">New</option>
+                <option value="like-new">Like New</option>
+                <option value="used">Used</option>
+            </select>
+        </div>
+        <button type="submit">Release</button>
+    </form>
+
+    <!-- 引入发布书籍的脚本 -->
+    <script src="js/book-publish.js"></script>
+    <!-- 新增：添加退出登录的全局函数（与其他页面保持一致） -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                alert('Please log in first.');
-                window.location.href = 'login.html';
-                return;
-            }
-
-            const publishForm = document.getElementById('publishForm');
-            const messageDiv = document.getElementById('message');
-
-            publishForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-
-                const title = publishForm.title.value.trim();
-                const author = publishForm.author.value.trim();
-                const price = publishForm.price.value.trim();
-
-                if (!title) {
-                    showMessage('Please enter the book title.', 'error');
-                    return;
-                }
-                if (!author) {
-                    showMessage('Please enter the author.', 'error');
-                    return;
-                }
-                if (!price || isNaN(price) || parseFloat(price) < 0) {
-                    showMessage('Please provide a valid price.', 'error');
-                    return;
-                }
-
-                fetch('http://127.0.0.1:5000/api/book/publish', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}` 
-                    },
-                    body: JSON.stringify({ title, author, price })
-                })
-                .then(response => {
-                    if (!response.ok) throw new Error('Service connection failed');
-                    return response.json();
-                })
-                .then(result => {
-                    if (result.success) {
-                        showMessage('Book release was successful.！', 'success');
-                        publishForm.reset();
-                    } else {
-                        showMessage(result.message, 'error');
-                        if (result.message.includes('Please log in first.')) {
-                            localStorage.removeItem('token');
-                            setTimeout(() => window.location.href = 'login.html', 1500);
-                        }
-                    }
-                })
-                .catch(error => {
-                    showMessage(error.message, 'error');
-                });
-            });
-
-            window.logout = function() {
-                localStorage.removeItem('token');
-            };
-
-            function showMessage(text, type) {
-                messageDiv.textContent = text;
-                messageDiv.className = `message ${type}`;
-            }
-        });
+        // 退出登录函数（与book-list.html保持一致）
+        function logout() {
+            localStorage.removeItem('token');
+            alert('Logged out successfully');
+        }
     </script>
 </body>
 </html>
