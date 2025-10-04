@@ -2,26 +2,213 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>All the books</title>
-    <link rel="stylesheet" href="../css/common.css">
-    <link rel="stylesheet" href="../css/book-list.css">
+    <title>Publish a book</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        .message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .success {
+            color: #28a745;
+            background-color: #f0fff4;
+            border: 1px solid #c3e6c3;
+        }
+
+        .error {
+            color: #dc3545;
+            background-color: #fff5f5;
+            border: 1px solid #ffe3e3;
+        }
+
+        .navbar {
+            margin-bottom: 30px;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .navbar a {
+            margin-right: 20px;
+            color: #007bff;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <div class="navbar">
-            <a href="book-publish.html">Publish a book</a>
+            <a href="book-list.html">View all books</a>
             <a href="change-password.html">Change password</a>
             <a href="login.html" onclick="logout()">Log out</a>
         </div>
         
-        <h2>All published books</h2>
-        <div id="message" class="message"></div>
-        <ul id="bookList" class="book-list">
-            <!-- The list of books will be dynamically generated through JavaScript. -->
-            <li>Loading......</li>
-        </ul>
+        <h2>Publish second-hand books</h2>
+        <form id="publishForm">
+            <div class="form-group">
+                <label for="title">Title of the book：</label>
+                <input type="text" id="title" name="title" placeholder="Please enter the book title.">
+            </div>
+            <div class="form-group">
+                <label for="author">Author：</label>
+                <input type="text" id="author" name="author" placeholder="Please enter the author.">
+            </div>
+            <div class="form-group">
+                <label for="price">Price (Yuan)：</label>
+                <input type="number" id="price" name="price" step="0.01" min="0" placeholder="Please enter the price.">
+            </div>
+            <button type="submit" class="btn">Publish a book</button>
+            <div id="message" class="message"></div>
+        </form>
     </div>
 
-    <script src="../js/book-list.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('Please log in first.');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const publishForm = document.getElementById('publishForm');
+            const messageDiv = document.getElementById('message');
+
+            publishForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const title = publishForm.title.value.trim();
+                const author = publishForm.author.value.trim();
+                const price = publishForm.price.value.trim();
+
+                if (!title) {
+                    showMessage('Please enter the book title.', 'error');
+                    return;
+                }
+                if (!author) {
+                    showMessage('Please enter the author.', 'error');
+                    return;
+                }
+                if (!price || isNaN(price) || parseFloat(price) < 0) {
+                    showMessage('Please provide a valid price.', 'error');
+                    return;
+                }
+
+                fetch('http://127.0.0.1:5000/api/book/publish', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}` 
+                    },
+                    body: JSON.stringify({ title, author, price })
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error('Service connection failed');
+                    return response.json();
+                })
+                .then(result => {
+                    if (result.success) {
+                        showMessage('Book release was successful.！', 'success');
+                        publishForm.reset();
+                    } else {
+                        showMessage(result.message, 'error');
+                        if (result.message.includes('Please log in first.')) {
+                            localStorage.removeItem('token');
+                            setTimeout(() => window.location.href = 'login.html', 1500);
+                        }
+                    }
+                })
+                .catch(error => {
+                    showMessage(error.message, 'error');
+                });
+            });
+
+            window.logout = function() {
+                localStorage.removeItem('token');
+            };
+
+            function showMessage(text, type) {
+                messageDiv.textContent = text;
+                messageDiv.className = `message ${type}`;
+            }
+        });
+    </script>
 </body>
 </html>
