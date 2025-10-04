@@ -1,0 +1,27 @@
+Error (fixed):
+1. Front-end and back-end do not match in the "condition" field of the book. 
+Front-end logic: In book-publish.js, when publishing a book, the "condition" field (such as "new", "like-new", etc.) is collected and passed to the back-end through a POST request; at the same time, in the rendering logic of book-list.html, the value of book.condition is attempted to be read and converted to Chinese using conditionMap for display.
+Back-end logic: In the publish_book interface of book_api.py, the "condition" field is not handled:
+The condition field is not extracted from the request data;
+The database insertion statement INSERT INTO books (title, author, price, user_id) ... does not include the "condition" field, resulting in the loss of the condition data passed from the front-end.
+Consequence: The back-end stored book data does not have the "condition" information, and when displayed on the front-end, book.condition will be undefined, making it impossible to display the book condition normally.
+2. There is duplicate JavaScript logic in book-list.html.
+Conflict: book-list.html contains an embedded <script> code that defines functions such as fetchBooks and renderBooks; at the same time, this page also imports an external book-list.js through <script src="js/book-list.js"></script>, and the external JS file also defines the same-named functions (such as fetchBooks, renderBooks, showMessage, etc.).
+Consequence: During page loading, the same-named functions in the embedded script and the external script will overwrite each other (depending on the loading order), which may lead to unexpected logic execution (for example, the logic of the external JS is overwritten by the embedded script, or vice versa), causing functional abnormalities (such as failed book list loading, incorrect display, etc.).
+Other potential issues
+Implicit problems with the database table structure:
+Due to the front-end passing the "condition" field, the back-end needs to add the "condition" field to the books table to store this information normally (currently, the insertion statement in book_api.py does not include this field, possibly due to the failure to update the table structure synchronously).
+Summary
+There are two clearly incompatible issues in the code that need to be fixed:
+The back-end book_api.py needs to add handling for the "condition" field (extracting, validating, and storing in the database);
+Remove the embedded script in book-list.html or the external book-list.js to avoid duplicate definition of functions.
+Test results of book publishing and viewing functions
+1. Backend interface:
+- Publishing interface: Successfully stores books, associates user ID, and intercepts null values/negative numbers;
+- Viewing interface: Returns all books and information of the publishers, sorted by time in reverse order.
+2. Front-end page:
+- Publishing page: Displays normally, validates input, provides result feedback, and automatically redirects without login;
+- Viewing page: Renders the book list correctly, displays a normal prompt for empty list, and shows the publisher information.
+3. Exception scenarios: All passed (scenarios such as negative prices, service interruption, etc. have correct prompts).
+4. Issues: None.
+Conclusion: The book publishing/viewing functions of A and B are normal and can be integrated for use.
