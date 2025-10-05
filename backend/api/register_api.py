@@ -1,55 +1,58 @@
-```python
 import mysql.connector
 from mysql.connector import Error
 from flask import request, jsonify
-from ..db.config import db_config
+from ..db.config import db_config  # Unified import of database configuration from db/config (consistent with login)
 
+# Lazy import of app to resolve circular dependencies (consistent with login_api.py style)
 def get_app():
-    from ..app import app
+    from ..app import app  # Relative path: import instance from app in the parent directory
     return app
 
+# Get app instance and register routes
 app = get_app()
 
-# Registration endpoint: POST /api/register
+# Register interface route (path matches frontend)
 @app.route('/api/register', methods=['POST'])
 def register():
     try:
+        # 1. Get username and password passed from the frontend
         data = request.get_json()
         username = data.get('username', '').strip()
         password = data.get('password', '').strip()
-        message_div = {"success": False, "message": ""}
 
-        # Non-null validation
+        # 2. Frontend parameter validation (non-empty check)
         if not username:
-            message_div["message"] = "Please enter username"
-            return jsonify(message_div)
+            return jsonify({"success": False, "message": "Please enter username"})
         if not password:
-            message_div["message"] = "Please enter password"
-            return jsonify(message_div)
+            return jsonify({"success": False, "message": "Please enter password"})
 
-        # Database operation
-        connection = mysql.connector.connect(**db_config)
+        # 3. Connect to the database and check if the username already exists
+        connection = mysql.connector.connect(** db_config)
         cursor = connection.cursor()
 
-        # Check if username already exists
-        cursor.execute("SELECT id FROM users WHERE username = %s", (username,))
-        if cursor.fetchone():
-            message_div["message"] = "Username already exists"
-            return jsonify(message_div)
+        # Check if the username is already registered
+        cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
+        if cursor.fetchone():  # If a result is found, it means the username already exists
+            return jsonify({"success": False, "message": "Username already exists"})
 
-        # Insert new user
-        cursor.execute("INSERT INTO users (username, password) VALUES (%s, %s)", (username, password))
-        connection.commit()
-        message_div["success"] = True
-        message_div["message"] = "Registration successful, please log in"
-        return jsonify(message_div)
+        # 4. Insert new user into the database
+        cursor.execute(
+            "INSERT INTO users (username, password) VALUES (%s, %s)",
+            (username, password)  # Note: In actual projects, passwords need to be encrypted; plain text is used here for demonstration
+        )
+        connection.commit()  # Commit the transaction
 
+        # 5. Return on successful registration
+        return jsonify({"success": True, "message": "Registration successful, please login"})
+
+    # Catch database errors (e.g., connection failure, SQL errors)
     except Error as e:
         return jsonify({"success": False, "message": f"Database error: {str(e)}"})
+    # Catch other unknown errors
     except Exception as e:
         return jsonify({"success": False, "message": f"Server error: {str(e)}"})
+    # Finally, close the database connection regardless of success or failure
     finally:
         if 'connection' in locals() and connection.is_connected():
             cursor.close()
             connection.close()
-```
