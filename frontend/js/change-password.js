@@ -64,8 +64,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    // 完善退出登录功能
     window.logout = function() {
         localStorage.removeItem('token');
+        alert('Logged out successfully');
+        window.location.href = 'login.html';
     };
 
     function showMessage(text, type) {
