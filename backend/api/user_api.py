@@ -62,3 +62,53 @@ def change_password():
         if 'connection' in locals() and connection.is_connected():
             cursor.close()
             connection.close()
+
+# Forgot password endpoint: POST /api/user/forgot-password
+@app.route('/api/user/forgot-password', methods=['POST'])
+def forgot_password():
+    try:
+        data = request.get_json()
+        username = data.get('username', '').strip()
+        new_password = data.get('new_password', '').strip()
+        message_div = {"success": False, "message": ""}
+
+        # Validate input
+        if not username:
+            message_div["message"] = "Please enter username"
+            return jsonify(message_div)
+        if not new_password:
+            message_div["message"] = "Please enter new password"
+            return jsonify(message_div)
+        if len(new_password) < 6:
+            message_div["message"] = "New password must be at least 6 characters"
+            return jsonify(message_div)
+
+        # Database operations
+        connection = mysql.connector.connect(** db_config)
+        cursor = connection.cursor(dictionary=True)
+
+        # Verify if username exists
+        cursor.execute("SELECT id FROM users WHERE username = %s", (username,))
+        user = cursor.fetchone()
+        if not user:
+            message_div["message"] = "Username does not exist"
+            return jsonify(message_div)
+
+        # Update password
+        cursor.execute(
+            "UPDATE users SET password = %s WHERE username = %s",
+            (new_password, username)
+        )
+        connection.commit()
+        message_div["success"] = True
+        message_div["message"] = "Password reset successful"
+        return jsonify(message_div)
+
+    except Error as e:
+        return jsonify({"success": False, "message": f"Database error: {str(e)}"})
+    except Exception as e:
+        return jsonify({"success": False, "message": f"Server error: {str(e)}"})
+    finally:
+        if 'connection' in locals() and connection.is_connected():
+            cursor.close()
+            connection.close()
