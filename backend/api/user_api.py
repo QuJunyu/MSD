@@ -72,7 +72,7 @@ def forgot_password():
         new_password = data.get('new_password', '').strip()
         message_div = {"success": False, "message": ""}
 
-        # Validate input
+        # 验证输入
         if not username:
             message_div["message"] = "Please enter username"
             return jsonify(message_div)
@@ -83,18 +83,18 @@ def forgot_password():
             message_div["message"] = "New password must be at least 6 characters"
             return jsonify(message_div)
 
-        # Database operations
+        # 数据库操作
         connection = mysql.connector.connect(** db_config)
         cursor = connection.cursor(dictionary=True)
 
-        # Verify if username exists
+        # 验证用户名是否存在
         cursor.execute("SELECT id FROM users WHERE username = %s", (username,))
         user = cursor.fetchone()
         if not user:
             message_div["message"] = "Username does not exist"
             return jsonify(message_div)
 
-        # Update password
+        # 更新密码
         cursor.execute(
             "UPDATE users SET password = %s WHERE username = %s",
             (new_password, username)
