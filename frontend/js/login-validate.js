@@ -56,4 +56,3 @@ document.addEventListener('DOMContentLoaded', function() {
         messageDiv.className = `message ${type}`;
     }
 });
-});
