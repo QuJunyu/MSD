@@ -1,9 +1,0 @@
-# Login Function Test Report 1 (September 29th)
-## Test Subjects:
-- A's login.html + login.css (Frontend/login branch)
-- B's Schema.sql (backend/Schema branch)
-## Test Steps:
-1. The HTML code renders the corresponding page effect on the browser, and performs actions such as logging in, etc.
-2. The browser user table relies on "the HTML fields of Frontend A", and the table fields are exactly corresponding to the fields submitted in the frontend form.
-## Test Results: Passed
-## Problem Records: None yet
