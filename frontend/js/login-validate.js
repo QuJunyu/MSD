@@ -1,4 +1,4 @@
-// 等待页面加载完成
+
 document.addEventListener('DOMContentLoaded', function() {
     const loginForm = document.getElementById('loginForm');
     const messageDiv = document.getElementById('message');
