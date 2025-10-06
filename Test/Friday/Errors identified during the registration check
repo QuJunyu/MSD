@@ -1,0 +1,27 @@
+1.The __init__.py code has a critical issue that causes the routes in register_api.py to potentially not be registered correctly, which is also one of the main reasons for the 404 error. The detailed analysis is as follows:
+Problem: The CORS configuration does not include the registration of the API, and the import method may not trigger the route registration
+The CORS configuration only allows the login interface, and the registration interface will be restricted by cross-domain requests
+
+CORS(app, resources={r"/api/login": {"origins": "*"}})
+
+This means that only the /api/login interface allows cross-domain requests, while the /api/register interface is not included.
+
+2.The register.js code only completed the "front-end form validation" (checking for non-empty username, password length, and consistency of the two passwords).
+It lacks the core logic of "sending the data to the backend registration interface".
+New addition: Sending a request to the backend registration interface (core supplementary part):
+fetch('http://127.0.0.1:5000/api/register', 
+     { 
+      method: 'POST', // 
+      headers: {
+        'Content-Type': 'application/json', // 
+      },
+      body: JSON.stringify({ // 
+        username: username,
+        password: password
+      })
+    })
+The interface address must be correct: the address in fetch, http://127.0.0.1:5000/api/register, must be exactly the same as the backend interface (the port and path cannot be wrong).
+The backend service must be started: run python -m backend.app.main to ensure that the backend is running on port 5000. Otherwise, an "network error" will be reported.
+The login page path must be correct: window.location.href = 'login.html' where login.html should be in the same folder as register.html (if not, the path needs to be adjusted, such as ../login.html).
+The field names in the form must match: registerForm.username and registerForm.password in the code, should be the same as the name attribute of the input boxes in your register.html (for example, the input boxes should have name="username"):
+

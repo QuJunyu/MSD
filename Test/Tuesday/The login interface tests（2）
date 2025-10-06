@@ -1,0 +1,36 @@
+Test Steps and Results
+1. Front-end Form Non-Empty Validation Test (Validate login-validate.js)
+Objective: Test the front-end JS function for intercepting empty usernames / passwords.
+Step 1: Empty username + any password
+Operation: On the login page, leave the username input box blank and input any content (such as 123) into the password input box, and click the "Login" button.
+Expected Result: A prompt box "Please enter your username." appears, and the form is not submitted.
+Step 2: Any username + empty password
+Operation: Input "testuser" for the username and leave the password input box blank, and click the "Login" button.
+Expected Result: A prompt box "Please enter the password." appears, and the form is not submitted.
+Step 3: Both username and password are empty
+Operation: Leave both input boxes blank and click the "Login" button.
+Expected Result: A prompt box "Please enter your username." appears (due to the JS first checking the username), and the form is not submitted.
+2. Normal Login Test (Validate Front-end-Back-end Interaction and Database Query)
+Objective: Test whether the correct username and password can log in successfully.
+Steps:
+On the login page, input "testuser1" for the username and 123456 for the password, and click the "Login" button.
+Open the browser developer tools (F12) → Switch to the "Console" panel.
+Expected Result:
+The console displays "Login information verification is successful. Preparation is underway to submit to the backend." (Front-end validation passed).
+Switch to the "Network" panel, and view the response of the api/login request, which should return {"success": true, "message": "Login successful", "token": "dummy_token"}.
+3. Exceptional Login Test (Validate Error Handling Logic)
+Objective: Test the backend response when username / password are incorrect.
+Scenario 1: Username is correct, password is incorrect
+Operation: Input "testuser1" (exists in the database) for the username and "wrongpass" for the password, and click login.
+Result: In the Network panel, the api/login response is {"success": false, "message": "Username or password is incorrect."}.
+Scenario 2: Username does not exist, password is any
+Operation: Input "nouser" (no such user in the database) for the username and 123456 for the password, and click login.
+Result: In the Network panel, the api/login response is {"success": false, "message": "Username or password is incorrect."}.
+Scenario 3: Username or password contains special characters Operation: Enter the username as "user@#$" and the password as "pass%^&" (first insert this user into the database: INSERT INTO users (username, password) VALUES ('user@#$', 'pass%^&');), then click Login.
+Result: The response is {"success": true, "message": "Login successful", "token": "dummy_token"} (to verify if special characters are handled correctly).
+4. Database connection error test (to verify the exception capture logic)
+Objective: To test if the backend can catch the error of failed database connection.
+Steps:
+Modify the password in db_config of login_api.py to an incorrect value (such as 'wrongpass'), then restart the backend service.
+Enter the correct username and password (such as "testuser1", "123456") on the login page and click Login.
+Result: In the Network panel, the response of api/login is {"success": false, "message": "Database error:..." }

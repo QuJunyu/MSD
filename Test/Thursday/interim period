@@ -1,0 +1,6 @@
+Pass：All the problems from yesterday have been resolved.
+1. Start the backend service: The prompt shows "* Running on http://127.0.0.1:5000" (accessible)
+2. Test cross-domain configuration (allowing front-end calls): Successful (the service can start, the browser can access, and Postman can see the cross-domain headers)
+3. Test if the interface can receive parameters using Postman: Returns {"success": true, "message": "Login successful"}: This indicates that the interface can normally receive parameters
+4. Test if empty parameters are intercepted (logical correctness): Result: Returns {"success": false, "message": "Username or password cannot be empty"}
+Question: The registry needs to be bound to the login interface.
