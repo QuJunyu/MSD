@@ -1,0 +1,9 @@
+Registration Function Test Results (Member C, Date: XXXX Year XX Month XX)
+1. Backend Interface Verification: Passed (Using Postman to register a new user as "test3", returned success and the database added a record);
+2. Normal Frontend Registration: Passed (Entering "test3/123456", displayed success and redirected to the login page);
+3. Exception Scenarios Test:
+   - Duplicate Registration: Passed (Prompted "Username already exists");
+   - Empty Username: Passed (Prompted "Please enter a username");
+   - Short Password: Passed (Prompted "Password must be at least 6 characters");
+4. Issues Recorded: None;
+5. Conclusion: The frontend registration page of A and the backend registration interface of B function normally and can be used normally.

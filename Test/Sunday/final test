@@ -1,0 +1,16 @@
+1. Login Test
+Enter the login ID and proceed to the password modification page.
+Input the correct old password (oldpassword123) and the new password (newpassword456, with a length of ≥ 6).
+Click the submit button.
+Result:
+After the backend verification is successful, it returns {"success": true, "message": "Password changed successfully, please log in again"}.
+The front-end displays a success message, and automatically redirects to the login page 1.5 seconds later. The token in localStorage is cleared (see lines 48-52 of change-password.js).
+The password field of this user in the database is updated to the new password.
+
+2.Old password is empty	The old password input field is left blank, new password input is new123	 Front end prompt: Please enter your old password. (Line 22 of change-password.js) 
+New password is empty. Old password entered as "oldpassword123", and the new password is left blank. Front-end prompt: Please enter a new password. (Line 25 of change-password.js) 
+The new password is less than 6 characters long. The old password is correct. The new password input is "new" (4 characters). The front-end prompt reads: "The new password must consist of at least 6 characters." (Line 28 of change-password.js) 
+The new and old passwords are the same. The old password and the new password both entered as "oldpassword123". The front-end prompt reads: "The new password cannot be the same as the old one." (Line 31 of "change-password.js") 
+Old password is incorrect. Old password input is wrongold, new password input is new123456. The backend returns {"success": false, "message": "Incorrect old password"}, and the front end displays this error (line 47 of user_api.py)
+
+3.All normal procedures and abnormal scenarios met expectations. The password modification function test was successful.

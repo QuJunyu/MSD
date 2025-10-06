@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Registration - Campus Second-hand Book Trading Platform</title>
+    <style>
+      .register-container {
+        width: 350px;
+        margin: 80px auto;  
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
+      
+      .form-group {
+        margin-bottom: 15px;
+      }
+      
+      .form-group label {
+        display: block;
+        margin-bottom: 5px;
+      }
+      
+      .form-group input {
+        width: 100%;
+        padding: 8px;
+        box-sizing: border-box;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+      
+      button {
+        width: 100%;
+        padding: 10px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      
+      button:hover {
+        background-color: #45a049;
+      }
+      
+      p {
+        text-align: center;
+        margin-top: 15px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="register-container">
+      <h2>User registration</h2>
+      <form id="registerForm">
+        <div class="form-group">
+          <label>Username：</label>
+          <input type="text" name="username" required>
+        </div>
+        <div class="form-group">
+          <label>Password：</label>
+          <input type="password" name="password" required>
+        </div>
+        <div class="form-group">
+          <label>Confirm Password：</label>
+          <input type="password" name="confirmPassword" required>
+        </div>
+        <button type="submit">注册</button>
+        <p>Existing account？<a href="login.html">Log in immediately</a></p>
+      </form>
+    </div>
+    <script src="js/register-validate.js"></script>
+  </body>
+</html>
+
+
